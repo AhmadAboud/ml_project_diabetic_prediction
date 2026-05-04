@@ -1,0 +1,11 @@
+2) 
+	Kann man Diabetes voraussagen und welche Faktoren sind relevant?
+  ??	https://www.kaggle.com/datasets/alexteboul/diabetes-health-indicators-dataset
+   
+  *	https://www.kaggle.com/datasets/uciml/pima-indians-diabetes-database
+	bei diesem Datensatz eventuell vorher ein Clustering machen
+	
+  ** 	2 Projekte mit je einem Datensatz durchführen 
+	und prüfen, ob man den Code des ersten Projektes so weit abstrahieren kann, 
+		dass das zweite Projekt ohne großes Nachdenken durchläuft.
+  ** 	Clustering durchführen und bewerten
