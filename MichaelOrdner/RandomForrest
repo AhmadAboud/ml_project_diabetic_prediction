@@ -1,0 +1,72 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+from sklearn.decomposition import PCA
+from sklearn.ensemble import RandomForestClassifier  
+
+
+for enc in ["utf-8", "cp1252", "latin1", "utf-8-sig"]:
+    try:
+        df = pd.read_csv("diabetes_binary_5050split_health_indicators_BRFSS2015.csv", encoding=enc)
+        
+       
+        print(f"{enc} funktioniert!")
+        break
+    except Exception as e:
+        print(f"{enc} fehlgeschlagen: {e}")
+
+X = df.drop('Diabetes_binary', axis=1)
+y = df['Diabetes_binary']
+
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score, classification_report
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+y_Vorhersage = model.predict(X_test)
+
+print("Genauigkeit:", accuracy_score(y_test, y_Vorhersage))
+print(classification_report(y_test, y_Vorhersage))
+
+rom sklearn.metrics import classification_report, roc_auc_score
+from sklearn.calibration import CalibratedClassifierCV
+
+
+neue_patienten = df.drop('Diabetes_binary', axis=1).head(5)
+
+vorhersagen = model.predict(neue_patienten)
+print("Vorhersagen:", vorhersagen)  # [0 oder 1]
+print("Wahrscheinlichkeiten:", model.predict_proba(neue_patienten))
+
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import brier_score_loss, roc_auc_score
+from sklearn.calibration import calibration_curve
+import matplotlib.pyplot as plt
+
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+
+Vorhersage = model.predict_proba(X_test)[:, 1]
+
+brier = brier_score_loss(y_test, Vorhersage)
+roc_auc = roc_auc_score(y_test, Vorhersage)
+
+print("Brier Score:", brier)
+print("ROC-AUC:", roc_auc)
+
+Vorhersage_true, Vorhersage_pred = calibration_curve(y_test, Vorhersage, n_bins=10)
+
+plt.plot(Vorhersage_pred, Vorhersage_true, marker="o")
+plt.plot([0, 1], [0, 1], "--")
+plt.xlabel("Mittlere voraussehbare Wahrscheinlichkeit")
+plt.ylabel("Anteil der pos.Fälle")
+plt.title("Kalibrierungs Kurve")
+plt.grid(True)
+plt.show()
